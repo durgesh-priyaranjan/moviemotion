@@ -121,6 +121,7 @@ media
 _assets
 _tasks
 _views
+./_Gruntfile.js
 ./config/default.js
 ./config/development.js
 ./config/production.js
