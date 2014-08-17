@@ -117,10 +117,10 @@ nbproject
 .idea
 .node_history
 
-
-._assets
-._tasks
-._views
+media
+_assets
+_tasks
+_views
 ./config/default.js
 ./config/development.js
 ./config/production.js
