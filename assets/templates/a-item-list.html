@@ -1,0 +1,76 @@
+<div class="innerLR">
+
+	<h3 class="margin-none pull-left capitalize">
+		<img ng-if="ALC.loading" src="/images/gen/loading.gif" class="header-loader">
+		{{ALC.item}}
+		<d ng-if="ALC.item != 'people'">s</d>
+		<span ng-if="ALC.type">({{ALC.type}})</span>
+	</h3>
+
+	<div class="btn-group btn-group-sm pull-right">
+		<a href="/a/{{ALC.item}}/new" class="btn btn-primary">
+			<i class="fa fa-fw fa-plus-circle"></i>
+			<d ng-if="ALC.item == 'people'">Add Person</d>
+			<d ng-if="ALC.item != 'people'">Add {{ALC.item}}</d>
+			<span ng-if="ALC.type">({{ALC.type}})</span>
+		</a>
+	</div>
+
+	<div class="clearfix"></div>
+	<div class="separator-h"></div>
+
+	<!-- Widget -->
+	<div class="widget widget-body-white">
+		<!-- Widget heading -->
+		<div class="widget-head">
+			<h4 class="heading glyphicons list">
+				<i></i>
+				Manage {{ALC.item}}<d ng-if="ALC.item != 'people'">s</d>
+				<span ng-if="ALC.type">({{ALC.type}})</span>
+			</h4>
+		</div>
+		<!-- // Widget heading END -->
+		<div class="widget-body">
+			<!-- Total products & Sort by options -->
+			<div class="form-inline">
+				<span class="pull-right">
+					<label class="strong innerLR">Sort by:</label>
+					<select name="from" class="form-control" ng-model="ALC.sortBy" ng-change="ALC.sortList()">
+						<option selected="selected" value="name">Name</option>
+						<option value="date">Date</option>
+					</select>
+				</span>
+				<div class="innerAll half strong pull-left">
+					Total {{ALC.item}}<d ng-if="ALC.item != 'people'">s</d>: {{ALC.items.length}}
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<!-- // Total products & Sort by options END -->
+			<div class="separator bottom"></div>
+			<!-- Products table -->
+			<table class="table table-bordered table-condensed table-striped table-primary table-vertical-center">
+				<thead>
+					<tr>
+						<th style="width: 1%;" class="center">No.</th>
+						<th>Title</th>
+						<th class="center">Date</th>
+						<th class="center" style="width: 100px;">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="single in ALC.items">
+						<td class="center">{{ $index+1 }}</td>
+						<td class="important">{{ single.name }}</td>
+						<td class="center">{{ single.date | date : short }}</td>
+						<td class="center">
+							<a href="/a/{{ALC.item}}/edit/{{single.id}}" class="btn btn-sm btn-success"><i class="fa fa-pencil"></i></a>
+							<a href="#" ng-click="ALC.deleteItem(single.id, single.name, ALC.item)" class="btn btn-sm btn-danger"><i class="fa fa-times"></i></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- // Products table END -->
+		</div>
+	</div>
+	<!-- // Widget END -->
+</div>

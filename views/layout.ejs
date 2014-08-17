@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="ie lt-ie9 lt-ie8 lt-ie7 sidebar sidebar-social footer-sticky"> <![endif]-->
+<!--[if IE 7]>    <html class="ie lt-ie9 lt-ie8 sidebar sidebar-social footer-sticky"> <![endif]-->
+<!--[if IE 8]>    <html class="ie lt-ie9 sidebar sidebar-social footer-sticky"> <![endif]-->
+<!--[if gt IE 8]> <html class="ie sidebar sidebar-social footer-sticky"> <![endif]-->
+
+<!--[if !IE]><!-->
+<html class="sidebar sidebar-social footer-sticky" ng-app="moviemotion">
+<!-- <![endif]-->
+
+
+<head>
+    <title>MovieMotion</title>
+
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+
+    <!--[if lt IE 9]>
+        <link rel="stylesheet" href="../assets/components/library/bootstrap/css/bootstrap.min.css" />
+    <![endif]-->
+
+    <!--STYLES-->
+    <link rel="stylesheet" href="/min/production.min.css">
+    <!--STYLES END-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+    <!-- HEADER SCRIPTS GO HERE -->
+    <script>
+        if ( /*@cc_on!@*/ false && document.documentMode === 10){
+            document.documentElement.className += ' ie ie10';
+        }
+    </script>
+</head>
+
+
+<body class="menu-right-hidden" ng-controller="BodyController as BC">
+
+    <toaster-container></toaster-container>
+	<%- body %>
+
+
+
+	<!--SCRIPTS-->
+<script src="/min/production.min.js"></script>
+<!--SCRIPTS END-->
+</body>
+
+
+</html>

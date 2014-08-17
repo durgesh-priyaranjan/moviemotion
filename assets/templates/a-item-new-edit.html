@@ -1,0 +1,1313 @@
+<div class="innerLR">
+	<h3 class="margin-none pull-left capitalize">
+		<img ng-if="ANC.loading" src="/images/gen/loading.gif" class="header-loader">
+		{{ANC.verb}} 
+		
+		<d ng-if="ANC.item == 'people'">Person</d>
+		<d ng-if="ANC.item != 'people'">{{ANC.item}}</d>
+		
+	</h3>
+	<input type="hidden" ng-model="ANC.base.id">
+	<div class="btn-group btn-group-sm pull-right">
+		<a href="/a/{{ANC.item}}/list" class="btn btn-default btn-icon glyphicons left_arrow capitalize">
+			<i></i> 
+			Back to {{ANC.item}}<d ng-if="ANC.item != 'people'">s</d>
+		</a>
+	</div>
+	<div class="clearfix"></div>
+	<div class="separator-h"></div>
+	<!-- Widget -->
+	<div class="widget widget-tabs border-none">
+
+
+		<!-- Widget heading -->
+		<div class="widget-head">
+			<ul>
+				<li ng-class="{active: ANC.activetab==1}">
+					<a href="javascript:void(0)" ng-click="ANC.activetab=1" class="glyphicons font"><i></i>Basic</a>
+				</li>
+				<li ng-class="{active: ANC.activetab==2}" ng-if="ANC.base.id && (ANC.item == 'movie')">
+					<a href="javascript:void(0)" ng-click="ANC.activetab=2" class="glyphicons asterisk"><i></i>Meta</a>
+				</li>
+				<li ng-class="{active: ANC.activetab==3}" ng-if="ANC.base.id">
+					<a href="javascript:void(0)" ng-click="ANC.activetab=3" class="glyphicons notes_2"><i></i>
+						<d ng-if="NC.item == 'movie'">Plot</d>
+						<d ng-if="NC.item != 'movie'">Description</d>
+					</a>
+				</li>
+				<li ng-class="{active: ANC.activetab==4}" ng-if="ANC.base.id && (ANC.item == 'movie')">
+					<a href="javascript:void(0)" ng-click="ANC.activetab=4" class="glyphicons parents"><i></i>Credits</a>
+				</li>
+				<li ng-class="{active: ANC.activetab==5}" ng-if="ANC.base.id">
+					<a href="javascript:void(0)" ng-click="ANC.activetab=5" class="glyphicons globe"><i></i>Social</a>
+				</li>
+				<li ng-class="{active: ANC.activetab==6}" ng-if="ANC.base.id && (ANC.item == 'movie')">
+					<a href="javascript:void(0)" ng-click="ANC.activetab=6" class="glyphicons music"><i></i>Music</a>
+				</li>
+				<li ng-class="{active: ANC.activetab==7}" ng-if="ANC.base.id">
+					<a href="javascript:void(0)" ng-click="ANC.activetab=7" class="glyphicons picture"><i></i>Photos</a>
+				</li>
+				<li ng-class="{active: ANC.activetab==8}" ng-if="ANC.base.id && (ANC.item == 'movie')">
+					<a href="javascript:void(0)" ng-click="ANC.activetab=8" class="glyphicons facetime_video"><i></i>Videos</a>
+				</li>
+			</ul>
+		</div>
+		<!-- // Widget heading END -->
+
+
+
+		<div class="widget-body">
+			<div class="tab-content">
+
+				<div class="tab-pane" ng-class="{active: ANC.activetab==1}">
+					<form class="form-horizontal" name="baseForm" novalidate ng-submit="ANC.submitBase(baseForm.$valid)">
+						<div class="row">
+							<div class="col-md-3">
+								<strong class="capitalize">
+									<d ng-if="ANC.item == 'people'">Person Name *</d>
+									<d ng-if="ANC.item != 'people'">{{ANC.item}} title</d>
+								</strong>
+								<p class="muted" ng-if="ANC.item != 'people'">Title of the {{ANC.item}}.</p>
+							</div>
+							<div class="col-md-9">
+								<label for="inputTitle capitalize" ng-if="ANC.item != 'people'">Title *</label>
+								<input type="text" id="inputTitle" class="form-control" ng-model="ANC.base.name" placeholder="Enter {{item}} title ..." ng-required="true" required>
+								<div class="separator"></div>
+							</div>
+						</div>
+
+						<hr class="separator bottom">
+
+						<div class="row">
+							<div class="col-md-3">
+								<strong>Slug</strong>
+								<p class="muted">MovieMotion URL to be created for the {{ANC.item}} page</p>
+							</div>
+							<div class="col-md-9">
+								<label for="textDescription">Slug *</label>
+								<div>
+									<div class="col-md-4">
+										<input type="text" disabled class="form-control" value="http://www.moviemotion.in/">
+									</div>
+									<div class="col-md-4">
+										<input type="text" 
+												name="slug" movie
+												placeholder="{{ANC.item}}-name" 
+												ng-model="ANC.base.slug" 
+												ng-pattern="/^[a-z0-9-]+$/"
+												required 
+												ng-keyup="ANC.checkSlug(ANC.base.slug)"
+												ng-disabled="ANC.base.id && ANC.base.slug && ANC.savedOnce" 
+												class="form-control">
+										<p class="small">Should not contain spaces, _ or any special character.</p>
+									</div>
+									<div class="col-md-2">
+										<span ng-show="ANC.slugAvailable == 'avail' " class="label bg-success">Available</span>
+										<span ng-show="ANC.slugAvailable == 'not-avail' " class="label bg-danger">Not Available</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<hr class="separator bottom">
+
+						<div class="row">
+							<div class="col-md-3">
+								<strong class="capitalize">Date</strong>
+								<p class="muted" ng-if="ANC.item == 'movie'">Date on which {{ANC.item}} is scheduled to be released.</p>
+								<p class="muted" ng-if="ANC.item == 'production' || ANC.item == 'publication'">Date of establishment.</p>
+								<p class="muted" ng-if="ANC.item == 'people'">Date of birth.</p>
+							</div>
+							<div class="col-md-3">
+								<label for="inputTitle capitalize">Date</label>
+								<p class="input-group">
+									<input type="text" 
+											class="form-control" 
+											datepicker-popup="MMMM dd, yyyy" 
+											ng-model="ANC.base.date"
+											is-open="opened" 
+											name="date" 
+											disabled="disabled" 
+											close-text="Close" />
+									<span class="input-group-btn">
+									{{ open }}
+									<button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+									</span>
+								</p>
+								<div class="separator"></div>
+							</div>
+						</div>
+
+						<div ng-if="ANC.item == 'people'">
+							<hr class="separator bottom">
+							<div class="row">
+								<div class="col-md-3">
+									<strong class="capitalize">Rights/Roles</strong>
+								</div>
+								<div class="col-md-3">
+									<div class="checkbox">
+									    <label>
+									      <input type="checkbox" ng-model="ANC.base.admin"> Admin
+									    </label>
+									</div>
+									<div class="checkbox">
+									    <label>
+									      <input type="checkbox" ng-model="ANC.base.star"> Star
+									    </label>
+									</div>
+									<div class="checkbox">
+									    <label>
+									      <input type="checkbox" ng-model="ANC.base.critic"> Critic
+									    </label>
+									</div>
+									<div class="checkbox">
+									    <label>
+									      <input type="checkbox" ng-model="ANC.base.reviewer"> Reviewer
+									    </label>
+									</div>
+									<div class="separator"></div>
+								</div>
+							</div>							
+						</div>
+
+						<hr class="separator bottom">						
+						<div class="text-right innerAll">
+							<div class="btn-group btn-group-sm">
+								<input type="submit" class="btn btn-primary">
+							</div>
+						</div>
+						<!-- // Row END -->
+					</form>
+
+				</div>
+				<!-- // Basic END -->
+
+				<!-- Meta -->
+				<div class="tab-pane" ng-class="{active: ANC.activetab==2}" ng-if="ANC.base.id && (ANC.item == 'movie')">
+
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Language(s)</strong>
+						</div>
+						<div class="col-md-9">
+							<input
+							    type="hidden"
+							    ui-select2="ANC.languagesOption"
+							    ng-model="ANC.base.languages"
+						    >
+							<div class="separator"></div>
+						</div>
+					</div>
+
+					<hr class="separator bottom">
+
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Genre</strong>
+						</div>
+						<div class="col-md-9">
+							<select class="select2-option" ui-select2 ng-model="ANC.base.genre">
+                            	<option></option>
+                                <optgroup label="Action">
+                                    <option value="Action-Comedy">Comedy</option>
+                                    <option value="Action-Crime">Crime</option>
+                                    <option value="Action-Thriller">Thriller</option>
+                                    <option value="Action">Action</option>
+                                </optgroup>
+                                <optgroup label="Adventure">
+                                    <option value="Adventure-Biography">Biography</option>
+                                    <option value="Adventure-Thriller">Thriller</option>
+                                    <option value="Adventure-War">War</option>
+                                    <option value="Adventure">Adventure</option>
+                                </optgroup>
+                                <optgroup label="Animation">
+                                    <option value="Animation-Adventure">Adventure</option>
+                                    <option value="Animation-Comedy">Comedy</option>
+                                    <option value="Animation-Family">Family</option>
+                                    <option value="Animation-Fantasy">Fantasy</option>
+                                    <option value="Animation">Animation</option>
+                                </optgroup>
+                                <optgroup label="Biography">
+                                    <option value="Biography-Crime">Crime</option>
+                                    <option value="Biography-Mystery">Mystery</option>
+                                    <option value="Biography-Sport">Sport</option>
+                                    <option value="Biography">Biography</option>
+                                </optgroup>
+                                <optgroup label="Comedy">
+                                    <option value="Comedy-Action">Action</option>
+                                    <option value="Comedy-Horror">Horror</option>
+                                    <option value="Comedy-Romance">Romance</option>
+                                    <option value="Comedy">Comedy</option>
+                                </optgroup>
+                                <optgroup label="Crime">
+                                    <option value="Crime-Drama">Drama</option>
+                                    <option value="Crime-Mystry">Mystry</option>
+                                    <option value="Crime-Romance">Romance</option>
+                                    <option value="Crime">Crime</option>
+                                </optgroup>
+                                <optgroup label="Documentary">
+                                    <option value="Documentary-Biography">Biography</option>
+                                    <option value="Documentary-Comedy">Comedy</option>
+                                    <option value="Documentary-Crime">Crime</option>
+                                    <option value="Documentary-History">History</option>
+                                    <option value="Documentary">Documentary</option>
+                                </optgroup>
+                                <optgroup label="Drama">
+                                    <option value="Drama-Romance">Romance</option>
+                                    <option value="Drama-Film-Noir">Film-Noir</option>
+                                    <option value="Drama-Musical">Musical</option>
+                                    <option value="Drama-War">War</option>
+                                    <option value="Drama">Drama</option>
+                                </optgroup>
+                                <optgroup label="Family">
+                                    <option value="Family-Adventure">Adventure</option>
+                                    <option value="Family-Comedy">Comedy</option>
+                                    <option value="Family-Fantasy">Fantasy</option>
+                                    <option value="Family-Romance">Romance</option>
+                                    <option value="Family">Family</option>
+                                </optgroup>
+                                <optgroup label="Fantasy">
+                                    <option value="Fantasy-Adventure">Adventure</option>
+                                    <option value="Fantasy-Comedy">Comedy</option>
+                                    <option value="Fantasy-Drama">Drama</option>
+                                    <option value="Fantasy-Romance">Romance</option>
+                                    <option value="Fantasy">Fantasy</option>
+                                </optgroup>
+                                <optgroup label="Film Noir">
+                                    <option value="Film Noir-Crime">Crime</option>
+                                    <option value="Film Noir-Mystery">Mystery</option>
+                                    <option value="Film Noir-Romance">Romance</option>
+                                    <option value="Film Noir-Thriller">Thriller</option>
+                                    <option value="Film Noir">Film Noir</option>
+                                </optgroup>
+                                <optgroup label="History">
+                                    <option value="History-Adventure">Adventure</option>
+                                    <option value="History-Biography">Biography</option>
+                                    <option value="History-Drama">Drama</option>
+                                    <option value="History-War">War</option>
+                                    <option value="History">History</option>
+                                </optgroup>
+                                <optgroup label="Horror">
+                                    <option value="Horror-Comedy">Comedy</option>
+                                    <option value="Horror-Drama">Drama</option>
+                                    <option value="Horror-SciFi">SciFi</option>
+                                    <option value="Horror">Horror</option>
+                                </optgroup>
+                                <optgroup label="Music">
+                                    <option value="Music-Biography">Biography</option>
+                                    <option value="Music-Documentary">Documentary</option>
+                                    <option value="Music-Drama">Drama</option>
+                                    <option value="Music">Music</option>
+                                </optgroup>
+                                <optgroup label="Musical">
+                                    <option value="Musical-Comedy">Comedy</option>
+                                    <option value="Musical-History">History</option>
+                                    <option value="Musical-Romance">Romance</option>
+                                    <option value="Musical">Musical</option>
+                                </optgroup>
+                                <optgroup label="Mystery">
+                                    <option value="Mystery-Adventure">Adventure</option>
+                                    <option value="Mystery-Comedy">Comedy</option>
+                                    <option value="Mystery-Thriller">Thriller</option>
+                                    <option value="Mystery">Mystery</option>
+                                </optgroup>
+                                <optgroup label="Romance">
+                                    <option value="Romance-Comedy">Comedy</option>
+                                    <option value="Romance-Crime">Crime</option>
+                                    <option value="Romance-History">History</option>
+                                    <option value="Romance-Thriller">Thriller</option>
+                                    <option value="Romance">Romance</option>
+                                </optgroup>
+                                <optgroup label="SciFi">
+                                    <option value="SciFi-Animation">Animation</option>
+                                    <option value="SciFi-Comedy">Comedy</option>
+                                    <option value="SciFi-Family">Family</option>
+                                    <option value="SciFi-Horror">Horror</option>
+                                    <option value="SciFi">SciFi</option>
+                                </optgroup>
+                                <optgroup label="Sport">
+                                    <option value="Sport-Biography">Biography</option>
+                                    <option value="Sport-Comedy">Comedy</option>
+                                    <option value="Sport-Documentary">Documentary</option>
+                                    <option value="Sport">Sport</option>
+                                </optgroup>
+                                <optgroup label="Thriller">
+                                    <option value="Thriller-Comedy">Comedy</option>
+                                    <option value="Thriller-Crime">Crime</option>
+                                    <option value="Thriller-Horror">Horror</option>
+                                    <option value="Thriller-Mystery">Mystery</option>
+                                    <option value="Thriller">Thriller</option>
+                                </optgroup>
+                                <optgroup label="War">
+                                    <option value="War-Action">Action</option>
+                                    <option value="War-Biography">Biography</option>
+                                    <option value="War-Comedy">Comedy</option>
+                                    <option value="War-Documentary">Documentary</option>
+                                    <option value="War">War</option>
+                                </optgroup>
+                                <optgroup label="Western">
+                                    <option value="Western-Action">Action</option>
+                                    <option value="Western-Adventure">Adventure</option>
+                                    <option value="Western-Comedy">Comedy</option>
+                                    <option value="Western">Western</option>
+                                </optgroup>
+                            </select>
+							<div class="separator"></div>
+						</div>
+					</div>
+
+					<hr class="separator bottom">
+
+					<div class="row">
+
+						<div class="col-md-3">
+							<strong>Certificate</strong>
+						</div>
+
+						<div class="col-md-9">
+							<select class="select2-option" name="certificate" ng-model="ANC.base.certificate" ui-select2>
+                            	<option></option>
+                                <optgroup label="Movies">
+                                    <option value="U">U (Universal)</option>
+                                    <option value="UA">UA (Parental Guidance)</option>
+                                    <option value="A">A (Adults Only)</option>
+                                    <option value="S">S (Restricted to any special class of persons)</option>
+                                </optgroup>
+                                <optgroup label="Videos">
+                                    <option value="V/U">V/U (Universal)</option>
+                                    <option value="V/UA">V/UA (Parental Guidance)</option>
+                                    <option value="V/A">V/A (Adults Only)</option>
+                                    <option value="V/S">V/S (Restricted to any special class of persons)</option>
+                                </optgroup>
+                            </select>
+							<div class="separator"></div>
+						</div>
+					</div>
+
+					<hr class="separator bottom">
+
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Duration</strong>
+						</div>
+						<div class="col-md-9">
+							<div class="input-group">
+								<input class="form-control col-md-10" ng-model="ANC.base.duration" type="text"> 
+								<span class="input-group-addon">Minutes</span>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+
+					<hr class="separator bottom">
+
+					<div class="text-right innerAll">
+						<div class="btn-group btn-group-sm">
+							<a href="" class="btn btn-primary"><i class="fa fa-fw fa-check"></i> Save</a>
+						</div>
+					</div>
+				</div>
+				<!-- // Meta END -->
+
+				<!-- Plot -->
+				<div class="tab-pane" ng-class="{active: ANC.activetab==3}" ng-if="ANC.base.id">
+					<!-- Row -->
+					<div class="row">
+						<!-- Column -->
+						<div class="col-md-2">
+							<strong ng-if="NC.item == 'movie'">Plot</strong>
+							<strong ng-if="NC.item != 'movie'">Description</strong>
+						</div>
+						<!-- // Column END -->
+						<!-- Column -->
+						<div class="col-md-10">
+							<text-angular ng-model="ANC.base.description"
+								ta-toolbar="[
+									['h3','h4','h5'],
+									['p','pre', 'quote'],
+									['bold','italics'],
+									['html','insertImage', 'insertLink']
+								]"
+							></text-angular>
+							<div class="separator"></div>
+						</div>
+						<!-- // Column END -->
+					</div>
+					<!-- // Row END -->
+					<hr class="separator bottom">
+					<div class="text-right innerAll">
+						<div class="btn-group btn-group-sm">
+							<a href="" class="btn btn-primary"><i class="fa fa-fw fa-check"></i> Save</a>
+						</div>
+					</div>
+					<!-- // Row END -->
+				</div>
+				<!-- // Plot END -->
+
+				<!-- Credits -->
+				<div class="tab-pane" ng-class="{active: ANC.activetab==4}" ng-if="ANC.base.id && (ANC.item == 'movie')">
+
+					<!-- Directed By -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Directed by</strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Directed By -->
+
+					<hr class="separator bottom">
+
+					<!-- Writing Credits -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Writing Credits</strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Writing Credits -->
+
+					<hr class="separator bottom">
+					
+					<!-- Cast (in credits order) -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Cast (in credits order)</strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Cast (in credits order) -->
+
+					<hr class="separator bottom">
+					
+					<!-- Rest of cast listed alphabetically: -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Rest of cast listed alphabetically</strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Rest of cast listed alphabetically: -->
+
+					<hr class="separator bottom">
+
+					<!-- Produced by -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Produced by</strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Produced by -->
+
+					<hr class="separator bottom">
+
+					<!-- Music by -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Music by</strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Music by -->
+
+					<hr class="separator bottom">
+
+
+					<!-- Cinematography by -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Cinematography by</strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Cinematography by -->
+
+					<hr class="separator bottom">
+
+
+					<!-- Film Editing by -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Film Editing by</strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Film Editing by -->
+
+					<hr class="separator bottom">
+
+
+					<!-- Production Design by -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Production Design by</strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Production Design by -->
+
+					<hr class="separator bottom">
+
+
+					<!-- Art Direction by -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Art Direction by</strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Art Direction by -->
+
+					<hr class="separator bottom">
+
+
+					<!-- Costume Design by -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Costume Design by</strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Costume Design by -->
+
+					<hr class="separator bottom">
+
+
+					<!-- Production Management -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Production Management</strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Production Management -->
+
+					<hr class="separator bottom">
+
+
+					<!-- Second Unit Director or Assistant Director -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Second Unit Director or Assistant Director</strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Second Unit Director or Assistant Director -->
+
+					<hr class="separator bottom">
+
+
+					<!-- Sound Department -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Sound Department</strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Sound Department -->
+
+					<hr class="separator bottom">
+
+
+					<!-- Special Effects by -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Special Effects by</strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Special Effects by -->
+
+					<hr class="separator bottom">
+
+
+					<!-- Visual Effects by  -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Visual Effects by </strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Visual Effects by  -->
+
+					<hr class="separator bottom">
+
+
+					<!-- Stunts -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Stunts</strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Stunts -->
+
+					<hr class="separator bottom">
+
+
+					<!-- Camera and Electrical Department  -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Camera and Electrical Department </strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Camera and Electrical Department  -->
+
+					<hr class="separator bottom">
+
+
+
+					<!-- Casting Department  -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Casting Department </strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Casting Department  -->
+
+					<hr class="separator bottom">
+
+
+
+					<!-- Editorial Department   -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Editorial Department  </strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Editorial Department   -->
+
+					<hr class="separator bottom">
+
+
+
+					<!-- Music Department  -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Music Department </strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Music Department  -->
+
+					<hr class="separator bottom">
+
+
+
+					<!-- Transportation Department  -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Transportation Department </strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Transportation Department  -->
+
+					<hr class="separator bottom">
+
+
+
+					<!-- Other crew  -->
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Other crew </strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<div class="row">
+								<div class="col-md-5"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4"><input type="text" class="form-control" placeholder=""></div>
+								<div class="col-md-2 text-right">
+									<a href=""><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href=""><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<!-- ./Other crew  -->
+					<hr class="separator bottom">
+					<div class="text-right innerAll">
+						<div class="btn-group btn-group-sm">
+							<a href="" class="btn btn-primary"><i class="fa fa-fw fa-check"></i> Save</a>
+						</div>
+					</div>
+					<!-- // Row END -->
+				</div>
+				<!-- // Credits END -->
+
+				<!-- Social -->
+				<div class="tab-pane" ng-class="{active: ANC.activetab==5}" ng-if="ANC.base.id">
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Website</strong>
+						</div>
+						<div class="col-md-9">
+							<input type="text" class="form-control" ng-model="ANC.base.social.website">
+							<div class="separator"></div>
+						</div>
+					</div>
+					<hr class="separator bottom">
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Wikipedia</strong>
+						</div>
+						<div class="col-md-9">
+							<input type="text" class="form-control" ng-model="ANC.base.social.wikipedia">
+							<div class="separator"></div>
+						</div>
+					</div>
+					<hr class="separator bottom">
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Facebook</strong>
+						</div>
+						<div class="col-md-9">
+							<input type="text" class="form-control" ng-model="ANC.base.social.facebook">
+							<div class="separator"></div>
+						</div>
+					</div>
+					<hr class="separator bottom">
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Pinterest</strong>
+						</div>
+						<div class="col-md-9">
+							<input type="text" class="form-control" ng-model="ANC.base.social.pinterest">
+							<div class="separator"></div>
+						</div>
+					</div>
+					<hr class="separator bottom">
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Instagram</strong>
+						</div>
+						<div class="col-md-9">
+							<input type="text" class="form-control" ng-model="ANC.base.social.instagram">
+							<div class="separator"></div>
+						</div>
+					</div>
+					<hr class="separator bottom">
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Youtube</strong>
+						</div>
+						<div class="col-md-9">
+							<input type="text" class="form-control" ng-model="ANC.base.social.youtube">
+							<div class="separator"></div>
+						</div>
+					</div>
+					<hr class="separator bottom">
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Gaana</strong>
+						</div>
+						<div class="col-md-9">
+							<input type="text" class="form-control" ng-model="ANC.base.social.gaana">
+							<div class="separator"></div>
+						</div>
+					</div>
+					<hr class="separator bottom">
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Twitter</strong>
+						</div>
+						<div class="col-md-9">
+							<input type="text" class="form-control" ng-model="ANC.base.social.twitter">
+							<div class="separator"></div>
+						</div>
+					</div>
+					<hr class="separator bottom">
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Twitter Handle</strong>
+						</div>
+						<div class="col-md-9">
+							<div class="input-group">
+								<span class="input-group-addon">@</span>
+								<input class="form-control" type="text"  ng-model="ANC.base.social.twitterHandle">
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<hr class="separator bottom">
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Twitter Hash</strong>
+						</div>
+						<div class="col-md-9">
+							<div class="input-group">
+								<span class="input-group-addon">#</span>
+								<input class="form-control" type="text" ng-model="ANC.base.social.twitterHash">
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<hr class="separator bottom">
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Others</strong>
+							<p class="muted">
+								<a href="#" ng-click="ANC.addOptions('social', 'webName', 'webURL')">Add new</a>
+							</p>
+						</div>
+						<div class="col-md-9">
+							<div class="row" ng-repeat="social in ANC.base.social.others">
+								<div class="col-md-5">
+									<input type="text" class="form-control" placeholder="Website Name" ng-model="social.webName">
+								</div>
+								<div class="col-md-1 text-center">..</div>
+								<div class="col-md-4">
+									<input type="text" class="form-control" placeholder="Website URL" ng-model="social.webURL">
+								</div>
+								<div class="col-md-2 text-right">
+									<a href="#" ng-click="ANC.moveUp('social', $index)"><i class="fa fa-arrow-circle-o-up font-24"></i></a>
+									<a href="#" ng-click="ANC.moveDown('social', $index)"><i class="fa fa-arrow-circle-o-down font-24"></i></a>
+								</div>
+							</div>
+							<div class="separator"></div>
+						</div>
+					</div>
+					<hr class="separator bottom">
+					<div class="text-right innerAll">
+						<div class="btn-group btn-group-sm">
+							<a href="" class="btn btn-primary" ng-click="ANC.submitBase(baseForm.$valid)"><i class="fa fa-fw fa-check"></i> Save</a>
+						</div>
+					</div>
+				</div>
+				<!-- // Social END -->
+
+				<!-- Music -->
+				<div class="tab-pane" ng-class="{active: ANC.activetab==6}" ng-if="ANC.base.id && (ANC.item == 'movie')">
+					<!-- Directed By -->
+					<div class="row">
+						<div class="box-generic">
+							<div class="input-group">
+							  	<input class="form-control" type="text" placeholder="Gaana.com URL">
+							  	<div class="input-group-btn"><button class="btn btn-default rounded-none" type="button"><i class="fa fa-search"></i></button></div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<strong>Songs</strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<label for="inputTitle capitalize">Title</label>
+							<input type="text" class="form-control">
+							<div class="separator"></div>
+							<label for="inputTitle capitalize">Music By</label>
+							<input type="text" class="form-control">
+							<div class="separator"></div>
+							<label for="inputTitle capitalize">Singers</label>
+							<input type="text" class="form-control">
+							<div class="separator"></div>
+							<label for="inputTitle capitalize">Lyrics By</label>
+							<input type="text" class="form-control">
+							<div class="separator"></div>
+							<label for="inputTitle capitalize">Lyrics</label>
+							<textarea class="form-control"></textarea>
+							<div class="separator"></div>
+							<hr class="separator bottom">
+						</div>
+					</div>
+					<!-- ./Directed By -->
+					<hr class="separator bottom">
+					<div class="text-right innerAll">
+						<div class="btn-group btn-group-sm">
+							<a href="" class="btn btn-primary"><i class="fa fa-fw fa-check"></i> Save</a>
+						</div>
+					</div>
+					<!-- // Row END -->
+				</div>
+				<!-- // Music END -->
+
+				<!-- Photos -->
+				<div class="tab-pane" ng-class="{active: ANC.activetab==7}" ng-if="ANC.base.id">
+
+					<div class="row">
+						<div>
+							<div class="widget widget-gallery" data-toggle="collapse-widget">
+								<div class="widget-body">
+							
+									<div class="tabsbar">
+										<ul>
+											<li class="glyphicons camera active">
+												<a href=""><i></i> View all photos <strong>(43)</strong></a>
+											</li>
+											<li class="glyphicons circle_plus tab-stacked" ng-file-select="ANC.onFileSelect($files)" data-multiple="true" accept="image/*">
+												<a href=""><i></i> <span>Add Photos</span></a>
+											</li>
+											<li ng-if="ANC.uploading">
+												<a>Uploading...</a>
+											</li>
+										</ul>
+									</div>
+
+									<div class="gallery">
+										<ul class="row">
+											
+											<li class="col-md-2">
+												<a class="thumb no-ajaxify" href="../assets/images/gallery-2/1.jpg" data-gallery="gallery-3">
+													<img src="../assets/images/gallery-2/1.jpg" alt="photo" class="img-responsive">
+												</a>
+											</li>
+
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="text-right innerAll">
+						<div class="btn-group btn-group-sm">
+							<a href="" class="btn btn-primary"><i class="fa fa-fw fa-check"></i> Save</a>
+						</div>
+					</div>
+					<!-- // Row END -->
+				</div>
+				<!-- // Photos END -->
+
+				<!-- Videos -->
+				<div class="tab-pane" ng-class="{active: ANC.activetab==8}" ng-if="ANC.base.id && (ANC.item == 'movie')">
+					<!-- Directed By -->
+					<div class="row">
+						<div class="box-generic">
+							<div class="input-group">
+							  	<input class="form-control" type="text" placeholder="youtube.com URL">
+							  	<div class="input-group-btn"><button class="btn btn-default rounded-none" type="button"><i class="fa fa-search"></i></button></div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<strong>Videos</strong>
+							<p class="muted"><a href="#">Add new</a></p>
+						</div>
+						<div class="col-md-9">
+							<label for="inputTitle capitalize">Title</label>
+							<input type="text" class="form-control">
+
+							<div class="separator"></div>
+
+							<label for="inputTitle capitalize">URL</label>
+							<input type="text" class="form-control">
+
+							<div class="separator"></div>
+
+							<label for="inputTitle capitalize">Description</label>
+							<input type="text" class="form-control">
+
+							<div class="separator"></div>
+
+							<label for="inputTitle capitalize">Release Date</label>
+							<p class="input-group">
+								<input type="text" 
+										class="form-control" 
+										datepicker-popup="MMMM dd, yyyy" 
+										ng-model="ANC.base.date"
+										is-open="opened" 
+										ng-required="true" 
+										required 
+										name="date" 
+										disabled="disabled" 
+										close-text="Close" />
+								<span class="input-group-btn">
+								<button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+								</span>
+							</p>
+
+							<div class="separator"></div>
+
+							<label for="inputTitle capitalize">Tags</label>
+							<input
+							    type="hidden"
+							    ui-select2="ANC.imagesOption"
+							    ng-model="ANC.meta.languages"
+						    >
+							<div class="separator"></div>							
+							<div class="separator"></div>
+							<hr class="separator bottom">
+						</div>
+					</div>
+					<!-- ./Directed By -->
+					<hr class="separator bottom">
+					<div class="text-right innerAll">
+						<div class="btn-group btn-group-sm">
+							<a href="" class="btn btn-primary"><i class="fa fa-fw fa-check"></i> Save</a>
+						</div>
+					</div>
+					<!-- // Row END -->
+				</div>
+				<!-- // Videos END -->
+			</div>
+		</div>
+	</div>
+	<!-- // Widget END -->
+</div>
