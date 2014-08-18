@@ -17,7 +17,6 @@ moviemotion = angular.module "moviemotion",
         "mm.apiservices",        
         "mm.services",
         "mm.socketServices",
-        "mm.imagesservices",
 
         "mm.directives"
     ]
