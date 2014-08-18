@@ -7,7 +7,7 @@
  */
 /*jshint onevar: false, indent:4 */
 /*global setImmediate: false, setTimeout: false, console: false */
-(function () {
+;(function () {
 
     var async = {};
 

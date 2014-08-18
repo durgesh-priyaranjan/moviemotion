@@ -1,3 +1,4 @@
+;
 /**
  * Note:
  * 		1. This version requires Angular UI Bootstrap >= v0.10.0 with templates

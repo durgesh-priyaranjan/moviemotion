@@ -8,7 +8,7 @@ Commercial use requires attribution.
 
 */
 
-var Holder = Holder || {};
+;var Holder = Holder || {};
 (function (app, win) {
 
 var preempted = false,

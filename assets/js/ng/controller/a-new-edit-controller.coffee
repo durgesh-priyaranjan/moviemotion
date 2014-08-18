@@ -1,3 +1,4 @@
+;
 class ANewEditController
 	# Default Contructor
 	constructor:(@$scope, @$timeout, @$routeParams, @$http, @SlugService, @BaseService, @APIServices, @toaster, @$upload)->

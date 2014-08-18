@@ -1,3 +1,4 @@
+;
 directiveModule = angular.module "mm.directives", []
 
 directiveModule.directive "capitalizeFirst", ()->

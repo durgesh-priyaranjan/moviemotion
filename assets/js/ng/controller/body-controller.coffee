@@ -1,3 +1,4 @@
+;
 controllerModule = angular.module "mm.controllers", []
 
 

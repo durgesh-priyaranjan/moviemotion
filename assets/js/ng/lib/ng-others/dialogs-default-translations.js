@@ -1,3 +1,4 @@
+;
 /**
  * Dialog Default Translations.
  *

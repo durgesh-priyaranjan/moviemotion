@@ -1,3 +1,4 @@
+;
 mmServices = angular.module "mm.services", []
 
 mmServices.factory "SlugService", ["$http", "$q", ( $http, $q )->

@@ -14,7 +14,7 @@
 	http://www.opensource.org/licenses/mit-license.php
 
 */
-(function($) {
+;(function($) {
 
 	var lastSize = 0;
 	var interval = null;

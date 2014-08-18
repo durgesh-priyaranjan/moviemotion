@@ -1,3 +1,4 @@
+;
 /**
  * @license AngularJS v1.3.0-beta.10
  * (c) 2010-2014 Google, Inc. http://angularjs.org

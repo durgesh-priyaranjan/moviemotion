@@ -9,7 +9,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  *
  **/
-(function($) {
+;(function($) {
 
 	function NotyfyObject(options) {
 		var self = this;

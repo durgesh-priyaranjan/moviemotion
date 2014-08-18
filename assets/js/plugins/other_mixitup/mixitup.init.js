@@ -1,4 +1,4 @@
-(function($)
+;(function($)
 {
 	
 	$('[class*="filter"][data-filter] a').on('click', function(e) {

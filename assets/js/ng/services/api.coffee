@@ -1,3 +1,4 @@
+;
 apiservices = angular.module "mm.apiservices", []
 
 apiservices.factory "APIServices", [
