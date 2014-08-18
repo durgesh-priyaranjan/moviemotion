@@ -28,6 +28,7 @@ var jsFilesToInject = [
   'js/dependencies/**/*.js',
 
   'js/library/lodash.js',
+  'js/library/async.js',
   'js/library/modernizr/modernizr.js',
 
   'js/library/jquery/jquery.min.js',

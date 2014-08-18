@@ -1,7 +1,42 @@
-;
+class EditImageModalController
+	constructor: (@$scope, @$modalInstance, @image, @slideshows, @APIServices) ->
+		@$scope.slideshowOptions = {
+			multiple: true
+			data: @slideshows
+			formatSelection: (item)->
+				item.name
+			formatResult: (item)->
+				item.name
+		}
+		@$scope.image = @image
+
+		@$scope.cancel = ()=>
+			@$modalInstance.dismiss 'cancel'
+		
+		@$scope.confirmEdit = ()=>
+			@APIServices.image.update {id: @image.id}, @$scope.image, (data)=>
+				if data.id then @$modalInstance.close @$scope.image
+
+EditImageModalController.$inject =  ["$scope", "$modalInstance", "image", "slideshows", "APIServices"]
+
+
+class EditSlideshowModalController
+	constructor: (@$scope, @$modalInstance, @slideshow, @APIServices) ->
+		@$scope.slideshow = @slideshow
+		@$scope.cancel = ()=>
+			@$modalInstance.dismiss 'cancel'
+
+		@$scope.confirmEdit = ()=>
+			@APIServices.slideshow.update {id: @slideshow.id}, @$scope.slideshow, (data)=>
+				if data.id then @$modalInstance.close @$scope.slideshow
+
+EditSlideshowModalController.$inject =  ["$scope", "$modalInstance", "slideshow", "APIServices"]
+	
+
+
 class ANewEditController
 	# Default Contructor
-	constructor:(@$scope, @$timeout, @$routeParams, @$http, @SlugService, @BaseService, @APIServices, @toaster, @$upload)->
+	constructor:(@$scope, @$timeout, @$routeParams, @$http, @SlugService, @BaseService, @APIServices, @toaster, @$upload, @$modal, @dialogs)->
 		@item = @$routeParams.item
 		@activetab = 1
 		@optionInit()
@@ -25,6 +60,8 @@ class ANewEditController
 
 		# Initilize arrays
 		@base = @base || {}
+		@images = @images || []
+		@slideshows = @slideshows || []
 
 		@base.social = @base.social || {}
 		@base.social.others = @base.social.others || []
@@ -41,8 +78,14 @@ class ANewEditController
 	fetcher:(model, id)->
 		# Fetch the initial data based on id
 		@base = @APIServices[model].get {id: id}, ( data )=>
-			if data.slug then @savedOnce = true
+			if data.slug
+				@savedOnce = true
+				@images = @APIServices.image.query { owner: data.slug}
+				@APIServices.slideshow.query { owner: data.slug}, (data)=>
+					@slideshows = data
+
 			@loading = false
+
 
 	# Slug presence/validity checker
 	checkSlug:(slug)->
@@ -60,7 +103,6 @@ class ANewEditController
 	# Save base data
 	# Base includes base, meta, desc/plot, social
 	submitBase:(isValid)->
-		console.log @slugAvailable
 		if !isValid or @slugAvailable is 'not-avail'
 			@toaster.pop 'error', "Incomplete Form", "Please fill the form completely."
 		else
@@ -78,24 +120,80 @@ class ANewEditController
 	# For uploading files
 	onFileSelect:($files)->
 		@uploading = true
-		for file in $files
-			@$scope.upload = @$upload.upload({
-					url: "/upload/#{@base.slug}",
-					data: {
-						name: "images"
-					}
-					file: file,
-					fileFormDataName: "image-uploader"
-				}).success((data, status, headers, config) =>
-					@uploading = true
-				).error((data, status, headers, config) =>
-					@uploading = true
-				)
+		async.each $files, 
+					(file, callback)=>
+						@$scope.upload = @$upload.upload({
+								url: "/upload/#{@base.slug}",
+								data: {
+									name: "images"
+								}
+								file: file,
+								fileFormDataName: "image-uploader"
+							}).success((data, status, headers, config) =>
+								if data.success then @images.push data.file
+								callback()
+							).error((data, status, headers, config) =>
+								callback()
+							)
+					, ( err ) =>
+						@uploading = false
 
-		return ""
+	editThumb:(image)->
+		editImageModalInstance = @$modal.open {
+    		templateUrl: "/templates/modal-edit-image.html"
+    		controller: "EditImageModalController"
+    		size: "lg"
+    		resolve: {
+        		image: ()=>
+           			image
+           		slideshows: ()=>
+           			@slideshows
+      		}
+    	}
+
+	deleteThumb:(image)->
+		confirm = @dialogs.confirm "Are you sure?", "You want to delete image."
+		confirm.result.then (btn) =>
+			@loading = true
+			@APIServices.image.delete {id: image.id}, (data)=>
+				_.remove @images, (obj) -> 
+					obj.id == image.id
+				@loading = false
+
+	createSlideshow: ()->
+		unless @newSlideshowName or @newSlideshowDesc
+			@toaster.pop 'error', "Incomplete Form", "Slideshow name and description are required."
+			return
+
+		@APIServices.slideshow.save {
+			name: @newSlideshowName
+			description: @newSlideshowDesc
+			owner: @base.slug
+		}, (data)=>
+			@slideshows.push data
 
 
+	openEditSlideshowModal: (slideshow)->
+		editSlideshowModalInstance = @$modal.open({
+    		templateUrl: "/templates/modal-edit-slideshow.html"
+    		controller: "EditSlideshowModalController"
+    		size: "lg"
+    		resolve: {
+        		slideshow: ()->
+           			slideshow
+      		}
+    	}).result.then (editedSlideshow)->
+    		""
 
+
+	deleteSlideshow: (slideshow)->
+		confirm = @dialogs.confirm "Are you sure?", "You want to delete slideshow. #{slideshow.name}"
+		confirm.result.then (btn) =>
+			@loading = true
+			@APIServices.slideshow.delete {id: slideshow.id}, (data)=>
+				_.remove @slideshows, (obj) -> 
+					obj.id == slideshow.id
+				@loading = false
 
 	# Initialize data from tags and dropdowns
 	optionInit:()->
@@ -138,6 +236,6 @@ class ANewEditController
 	# #
 
 
-ANewEditController.$inject =  ['$scope', '$timeout', '$routeParams', '$http', 'SlugService', 'BaseService', 'APIServices', 'toaster', '$upload']
+ANewEditController.$inject =  ['$scope', '$timeout', '$routeParams', '$http', 'SlugService', 'BaseService', 'APIServices', 'toaster', '$upload', '$modal', 'dialogs']
 controllerModule = angular.module "mm.controllers", []
 controllerModule.controller "ANewEditController", ANewEditController;

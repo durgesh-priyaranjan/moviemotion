@@ -1,0 +1,24 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 class="modal-title">Edit Slideshow</h3>
+</div>
+<div class="modal-body">
+	<div class="row">
+		<div class="col-md-12">
+			<label for="inputTitle">Name</label>
+			<input type="text" class="form-control" ng-model="slideshow.name">
+			<input type="hidden" class="form-control" ng-model="slideshow.owner">
+			<input type="hidden" class="form-control" ng-model="slideshow.id">
+			<div class="separator"></div>
+			<label for="inputTitle">Description</label>
+			<textarea class="form-control" ng-model="slideshow.description"></textarea>
+			<div class="separator"></div>
+			<hr class="separator bottom">						
+			<div class="text-right innerAll">
+				<div class="btn-group btn-group-sm">
+					<button class="btn btn-primary" ng-click="confirmEdit()">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

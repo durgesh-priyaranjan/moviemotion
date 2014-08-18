@@ -44,11 +44,14 @@
 				<li ng-class="{active: ANC.activetab==6}" ng-if="ANC.base.id && (ANC.item == 'movie')">
 					<a href="javascript:void(0)" ng-click="ANC.activetab=6" class="glyphicons music"><i></i>Music</a>
 				</li>
-				<li ng-class="{active: ANC.activetab==7}" ng-if="ANC.base.id">
+				<li ng-class="{active: ANC.activetab==7}" ng-if="ANC.base.id && ANC.base.slug">
 					<a href="javascript:void(0)" ng-click="ANC.activetab=7" class="glyphicons picture"><i></i>Photos</a>
 				</li>
 				<li ng-class="{active: ANC.activetab==8}" ng-if="ANC.base.id && (ANC.item == 'movie')">
 					<a href="javascript:void(0)" ng-click="ANC.activetab=8" class="glyphicons facetime_video"><i></i>Videos</a>
+				</li>
+				<li ng-class="{active: ANC.activetab==9}" ng-if="ANC.base.id && ANC.base.slug">
+					<a href="javascript:void(0)" ng-click="ANC.activetab=9" class="glyphicons picture"><i></i>Slideshows</a>
 				</li>
 			</ul>
 		</div>
@@ -1190,7 +1193,7 @@
 				<!-- // Music END -->
 
 				<!-- Photos -->
-				<div class="tab-pane" ng-class="{active: ANC.activetab==7}" ng-if="ANC.base.id">
+				<div class="tab-pane" ng-class="{active: ANC.activetab==7}" ng-if="ANC.base.id && ANC.base.slug">
 
 					<div class="row">
 						<div>
@@ -1213,23 +1216,26 @@
 
 									<div class="gallery">
 										<ul class="row">
-											
-											<li class="col-md-2">
-												<a class="thumb no-ajaxify" href="../assets/images/gallery-2/1.jpg" data-gallery="gallery-3">
-													<img src="../assets/images/gallery-2/1.jpg" alt="photo" class="img-responsive">
+											<li class="col-md-2 thumb-bg-container" ng-repeat="image in ANC.images">
+												<a class="thumb thumb-bg" href="#" style="background-image: url('/media/{{ANC.base.slug}}/small/{{image.name}}') ">
 												</a>
+												<div class="thumb-overlay">
+													<a href="" ng-click="ANC.editThumb(image)" class="thumb-edit">
+														<i class="fa fa-edit"></i>
+													</a>
+													<a href="" class="thumb-delete" ng-click="ANC.deleteThumb(image)">
+														<i class="fa fa-fw icon-trash-can"></i>
+													</a>
+												</div>
+												<div class="display-pic-notifier" ng-if="image.isDisplayPic">
+													Display Pic
+												</div>
+												<div class="ribbon-wrapper small" ng-if="image.isCoverImage"><div class="ribbon success">Cover Pic</div></div>
 											</li>
-
 										</ul>
 									</div>
 								</div>
 							</div>
-						</div>
-					</div>
-
-					<div class="text-right innerAll">
-						<div class="btn-group btn-group-sm">
-							<a href="" class="btn btn-primary"><i class="fa fa-fw fa-check"></i> Save</a>
 						</div>
 					</div>
 					<!-- // Row END -->
@@ -1306,6 +1312,79 @@
 					<!-- // Row END -->
 				</div>
 				<!-- // Videos END -->
+
+
+				<!-- Slideshow -->
+				<div class="tab-pane" ng-class="{active: ANC.activetab==9}" ng-if="ANC.base.id && ANC.base.slug">
+
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Name</strong>
+						</div>
+						<div class="col-md-9">
+							<input class="form-control" type="text" ng-model="ANC.newSlideshowName">
+							<div class="separator"></div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-3">
+							<strong>Description</strong>
+						</div>
+						<div class="col-md-9">
+							<textarea class="form-control" ng-model="ANC.newSlideshowDesc"></textarea>
+							<div class="separator"></div>
+						</div>
+					</div>
+
+					<hr class="separator bottom">
+
+					<div class="text-right innerAll">
+						<div class="btn-group btn-group-sm">
+							<a href="#" class="btn btn-primary" ng-click="ANC.createSlideshow()"><i class="fa fa-fw fa-check"></i> Create Slideshow </a>
+						</div>
+					</div>
+
+					<hr class="separator bottom">
+
+					<div class="widget widget-body-white">
+						<!-- Widget heading -->
+						<div class="widget-head">
+							<h4 class="heading glyphicons list ng-binding">
+								<i></i>
+								Slideshows
+							</h4>
+						</div>
+						<!-- // Widget heading END -->
+						<div class="widget-body">
+							<!-- Products table -->
+							<table class="table table-bordered table-condensed table-striped table-primary table-vertical-center">
+								<thead>
+									<tr>
+										<th style="width: 1%;" class="center">No.</th>
+										<th>Name</th>
+										<th class="center">Description</th>
+										<th class="center" style="width: 100px;">Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="slideshow in ANC.slideshows">
+										<td class="center ng-binding">{{$index + 1}}</td>
+										<td class="important ng-binding">{{ slideshow.name }}</td>
+										<td class="center ng-binding">{{ slideshow.description }}</td>
+										<td class="center">
+											<a href="#" ng-click="ANC.openEditSlideshowModal(slideshow)" class="btn btn-sm btn-success"><i class="fa fa-pencil"></i></a>
+											<a href="#" ng-click="ANC.deleteSlideshow(slideshow)" class="btn btn-sm btn-danger"><i class="fa fa-times"></i></a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<!-- // Products table END -->
+						</div>
+					</div>
+
+				</div>
+				<!-- // Slideshow END -->
+
 			</div>
 		</div>
 	</div>
