@@ -1,10 +1,10 @@
 module.exports = {
     DB: {
         adapter: 'sails-mongo',
-        host: 'kahana.mongohq.com',
-        port: 10001,
-        user: 'durgesh',
-        password: 'iwasbi85',
+        host: 'localhost',
+        port: 27017,
+        user: '',
+        password: '',
         database: 'moviemotion'
     },
 
