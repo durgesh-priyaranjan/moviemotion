@@ -27,10 +27,27 @@ module.exports.routes = {
 	// Frontend Routes
 	// ***
 	'/': "RouteController.home",
+	
+	'/star/list': "FrontendviewroutesController",
+	'/star/full/:id': "FrontendviewroutesController",
+
+	'/production/list': "FrontendviewroutesController",
+	'/production/full/:id': "FrontendviewroutesController",
+
+	'/publication/list': "FrontendviewroutesController",
+	'/publication/full/:id': "FrontendviewroutesController",
+	
+	'/movie/released': "FrontendviewroutesController",
+	'/movie/upcoming': "FrontendviewroutesController",
+	'/movie/list': "FrontendviewroutesController",
+	'/movie/full/:id': "FrontendviewroutesController",
 
 	//Credentials
 	"/login": "RouteController.login",
 	'/logout': "auth.logout",
+
+	// Handle slug i.e movie and profile page
+	'/:slug': "FrontendviewroutesController",
 
 
 	// ***

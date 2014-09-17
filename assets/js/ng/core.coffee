@@ -29,10 +29,12 @@ moviemotion.config ['$routeProvider', '$locationProvider', ($routeProvider, $loc
             templateUrl: '/templates/home.html',
             controller: '',
             controllerAs: "HC"
-        .when '/movie/:id',
-            templateUrl: '/templates/movie-single.html',
-            controller: '',
-            controllerAs: "SMC"
+
+        .when '/:slug',
+            templateUrl: '/templates/f-slug.html',
+            controller: 'FSlugController',
+            controllerAs: "FSC"
+        
         .when '/movies/just-released',
             templateUrl: '/templates/movie-list.html',
             controller: '',
@@ -41,14 +43,20 @@ moviemotion.config ['$routeProvider', '$locationProvider', ($routeProvider, $loc
             templateUrl: '/templates/movie-list.html',
             controller: '',
             controllerAs: "LC"
-        .when '/movies/calendar',
+        .when '/movie/calendar',
             templateUrl: '/templates/movie-calendar.html',
             controller: '',
             controllerAs: "CC"
-        .when '/movies/list',
-            templateUrl: '/templates/movie-list.html',
-            controller: '',
-            controllerAs: "LC"
+        
+        .when '/:item/list',
+            templateUrl: '/templates/f-item-list.html',
+            controller: 'FListController',
+            controllerAs: "FLC"
+
+        # .when '/:type/list',
+        #     templateUrl: '/templates/list.html',
+        #     controller: 'ListController',
+        #     controllerAs: "LC"
 
         # Backend End Routes
         .when '/a/:item/list/:type?',

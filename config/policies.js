@@ -26,7 +26,8 @@ module.exports.policies = {
 	},
 
 	PeopleCOntroller: {
-		"*": "admin"
+		"*": "admin",
+		"celebsList": true
 	}
 
 	// Here's an example of mapping some policies to run before

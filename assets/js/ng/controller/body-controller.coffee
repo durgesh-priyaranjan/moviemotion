@@ -10,7 +10,7 @@ class SigninModalController
 		@$scope.cancel = ()=>
 			@$modalInstance.dismiss 'cancel'
 
-
+SigninModalController.$inject = ['$scope', '$modalInstance']
 
 
 

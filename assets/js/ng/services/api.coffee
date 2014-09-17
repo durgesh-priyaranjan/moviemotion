@@ -5,11 +5,11 @@ apiservices.factory "APIServices", [
 	'$resource', 
 	($resource)->
 		{ 
-			movie: $resource('/movies/:id', {id: '@id'}, { update: {method:'PUT' } }),
-			production: $resource('/productions/:id', {id: '@id'}, { update: {method:'PUT' } }),
-			publication: $resource('/publications/:id', {id: '@id'}, { update: {method:'PUT' } }), 
-			people: $resource('/people/:id', {id: '@id'}, { update: {method:'PUT' } }), 
-			image: $resource('/images/:id', {id: '@id'}, { update: {method:'PUT' } }) ,
-			slideshow: $resource('/slideshows/:id', {id: '@id'}, { update: {method:'PUT' } }) 
+			movie: $resource('/api/movies/:id', {id: '@id'}, { update: {method:'PUT' } }),
+			production: $resource('/api/productions/:id', {id: '@id'}, { update: {method:'PUT' } }),
+			publication: $resource('/api/publications/:id', {id: '@id'}, { update: {method:'PUT' } }), 
+			people: $resource('/api/people/:id', {id: '@id'}, { update: {method:'PUT' } }), 
+			image: $resource('/api/images/:id', {id: '@id'}, { update: {method:'PUT' } }) ,
+			slideshow: $resource('/api/slideshows/:id', {id: '@id'}, { update: {method:'PUT' } }) 
 		}
 ]
